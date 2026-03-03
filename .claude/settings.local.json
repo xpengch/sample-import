@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo:*)",
+      "Bash(if:*)",
+      "Bash(then ls \"$APPDATA/Claude\")",
+      "Bash(else ls ~/AppData/Roaming/Claude)",
+      "Bash(fi)",
+      "Bash(where:*)",
+      "WebSearch",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

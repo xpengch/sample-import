@@ -1,0 +1,15 @@
+llm:
+  api_key: "${ANTHROPIC_AUTH_TOKEN}"
+  base_url: "${ANTHROPIC_BASE_URL}"
+  model: "claude-3-5-sonnet-20241022"
+
+workflow:
+  max_iterations: 10
+  enable_rewind: true
+
+skills:
+  log_parser:
+    enabled: true
+  fault_detector:
+    enabled: true
+    use_llm: true
