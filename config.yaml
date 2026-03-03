@@ -1,15 +1,15 @@
-llm:
-  api_key: "${ANTHROPIC_AUTH_TOKEN}"
-  base_url: "${ANTHROPIC_BASE_URL}"
-  model: "claude-3-5-sonnet-20241022"
-
-workflow:
+# Configuration
+session:
   max_iterations: 10
-  enable_rewind: true
+  max_hypotheses: 5
 
-skills:
-  log_parser:
-    enabled: true
-  fault_detector:
-    enabled: true
-    use_llm: true
+hypotheses:
+  min_confidence: 0.9
+  reject_threshold: 0.05
+
+testing:
+  mock_mode: true
+
+state:
+  directory: ~/.chip-fault-locator
+  auto_save: true

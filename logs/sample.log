@@ -1,0 +1,4 @@
+2026-03-03 10:00:00 [INFO] System initialized
+2026-03-03 10:00:05 [ERROR] Clock signal abnormal: value=0x0000 expected=0xFFFF
+2026-03-03 10:00:10 [WARN] Voltage fluctuation: 3.2V (range: 3.0-3.6V)
+2026-03-03 10:00:15 [ERROR] Timeout waiting for response from peripheral
