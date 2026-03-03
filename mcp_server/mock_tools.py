@@ -43,6 +43,13 @@ class MockClockTestTool(ClockTestTool):
                 "setup_margin_ps": -25,
                 "hold_margin_ps": 30
             }
+        elif "hold_violation" in test_case.lower():
+            status = TestStatus.FAILED
+            output = "检测到保持时间违例"
+            metrics = {
+                "setup_margin_ps": 20,
+                "hold_margin_ps": -15
+            }
         else:
             status = TestStatus.PASSED
             output = "时钟域测试通过"

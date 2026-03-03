@@ -38,6 +38,21 @@ def test_mock_clock_tool():
     assert result.metrics["skew_ps"] == 150
 
 
+def test_mock_clock_tool_hold_violation():
+    """测试时钟域保持时间违例"""
+    tool = MockClockTestTool()
+
+    result = tool.execute({
+        "test_id": "test_001b",
+        "test_case": "hold_violation"
+    })
+
+    assert result.test_id == "test_001b"
+    assert result.status == TestStatus.FAILED
+    assert "保持时间违例" in result.output
+    assert result.metrics["hold_margin_ps"] == -15
+
+
 def test_mock_power_tool():
     """测试电源 Mock 工具"""
     tool = MockPowerTestTool()

@@ -60,44 +60,38 @@
 
 | 假设内容 | test_case | 关键参数 |
 |---------|-----------|----------|
-| CDC 同步问题 | `cdc_violation` | clock_domain_a, clock_domain_b |
-| 时钟偏斜 | `skew` | skew_threshold_ps |
 | 时钟串扰 | `crosstalk` | affected_signals |
 | 建立时间违例 | `setup_violation` | path_delay |
 | 保持时间违例 | `hold_violation` | path_delay |
+| CDC 同步问题 | `default` | clock_domain_a, clock_domain_b |
 
 ### 电源测试
 
 | 假设内容 | test_case | 关键参数 |
 |---------|-----------|----------|
 | 欠压 | `undervoltage` | rail_name, threshold_v |
-| 过压 | `overvoltage` | rail_name, threshold_v |
 | 过流 | `overcurrent` | rail_name, max_current_ma |
-| 功耗异常 | `power_consumption` | mode, expected_power_mw |
+| 其他电源问题 | `default` | rail_name |
 
 ### 温度测试
 
 | 假设内容 | test_case | 关键参数 |
 |---------|-----------|----------|
 | 过热 | `overheat` | sensor_location, max_temp_c |
-| 热梯度 | `gradient` | measurement_points |
 | 热循环 | `thermal_cycling` | cycle_count |
+| 其他温度问题 | `default` | sensor_location |
 
 ### 通用测试
 
-| 假设内容 | test_type | 关键参数 |
-|---------|-----------|----------|
-| 总线超时 | `bus_timeout` | bus_name, timeout_us |
-| 中断异常 | `interrupt` | irq_number, test_mode |
-| DMA 错误 | `dma_transfer` | channel, direction |
-| 寄存器错误 | `register_access` | reg_addr, access_type |
+通用测试使用 `general_test` 工具，可传递任何 test_case 和相关参数。
 
 ## 测试执行指导
 
 1. **使用 MCP Server 执行测试**
-   ```
-   调用 mcp_server.server.execute_tool_sync()
-   传入工具名称和参数
+   ```python
+   from mcp_server.server import get_server
+   server = get_server()
+   result = server.execute_tool_sync(tool_name, params)
    ```
 
 2. **收集测试结果**

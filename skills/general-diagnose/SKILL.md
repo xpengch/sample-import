@@ -38,11 +38,7 @@
      "content": "AXI 总线写响应超时",
      "confidence": 0.7,
      "evidence": ["log_line_345", "log_line_678"],
-     "test_plan": {
-       "tool": "general_test",
-       "test_type": "bus_timeout",
-       "expected": "fail"
-     }
+     "test_history": []
    }
    ```
 

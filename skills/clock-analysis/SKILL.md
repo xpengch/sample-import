@@ -23,7 +23,7 @@
 
 2. **检测时钟问题**
    - 搜索时序违例报告
-   - 查找 CDC 跨时钟域��号
+   - 查找 CDC 跨时钟域信号
    - 识别时钟树问题
 
 3. **分析根因**
@@ -41,11 +41,7 @@
      "content": "时钟域A到域B的CDC同步不当",
      "confidence": 0.8,
      "evidence": ["log_line_123", "log_line_456"],
-     "test_plan": {
-       "tool": "clock_test",
-       "test_case": "cdc_violation",
-       "expected": "fail"
-     }
+     "test_history": []
    }
    ```
 
@@ -59,22 +55,31 @@
 
 ## 常见问题模式
 
-1. **时钟偏斜过大**
-   - 症状：时序违例，数据采样错误
-   - 证据：`setup violation`, `hold violation`
-   - 测试：使用 `clock_test` 工具，test_case 设为 `skew`
-
-2. **CDC 同步问题**
-   - 症状：亚稳态，随机错误
-   - 证据：`metastability`, `async reset`
-   - 测试：使用 `clock_test` 工具，test_case 设为 `cdc_violation`
-
-3. **时钟串扰**
-   - 症状：时钟抖动增加
+1. **时钟串扰**
+   - 症状：时钟抖动增加，时序不稳定
    - 证据：`jitter`, `crosstalk`
    - 测试：使用 `clock_test` 工具，test_case 设为 `crosstalk`
 
-4. **时钟缺失/错误**
-   - 症状：模块无响应
-   - 证据：`no clock`, `clock stuck`
-   - 测试：使用 `clock_test` 工具，test_case 设为 `clock_missing`
+2. **建立时间违例**
+   - 症状：数据采样错误，功能异常
+   - 证据：`setup violation`
+   - 测试：使用 `clock_test` 工具，test_case 设为 `setup_violation`
+
+3. **保持时间违例**
+   - 症状：数据竞争，随机错误
+   - 证据：`hold violation`
+   - 测试：使用 `clock_test` 工具，test_case 设为 `hold_violation`
+
+4. **CDC 同步问题**
+   - 症状：亚稳态，随机错误
+   - 证据：`metastability`, `async reset`
+   - 测试：使用 `clock_test` 工具，test_case 设为 `default`
+
+## 支持的测试用例
+
+| test_case | 描述 |
+|-----------|------|
+| `crosstalk` | 时钟串扰测试 |
+| `setup_violation` | 建立时间违例测试 |
+| `hold_violation` | 保持时间违例测试 |
+| `default` | 默认时钟域测试 |
