@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Dict, Any
 from mcp_server.tools import (
     ClockTestTool, PowerTestTool, TemperatureTestTool, GeneralTestTool,
+    BoardControlTool,
     TestResult, TestStatus, register_tool
 )
 
@@ -223,12 +224,103 @@ class MockGeneralTestTool(GeneralTestTool):
         return True
 
 
+class MockBoardControlTool(BoardControlTool):
+    """单板控制工具 Mock 实现"""
+
+    def __init__(self, mock_mode: bool = True):
+        self.mock_mode = mock_mode
+
+    def execute(self, params: Dict[str, Any]) -> TestResult:
+        """执行单板控制操作（Mock）"""
+        start_time = time.time()
+        action = params.get("action", "")
+
+        # 模拟不同操作的结果
+        if action == "restart":
+            status = TestStatus.PASSED
+            output = "Mock: 单板重启成功"
+            metrics = {
+                "restart_type": params.get("restart_type", "soft"),
+                "boot_duration_sec": random.uniform(30, 90)
+            }
+        elif action == "detect_hang":
+            # 模拟挂死检测
+            is_hung = params.get("simulate_hang", False)
+            status = TestStatus.PASSED
+            output = f"Mock: 挂死检测完成 - {'检测到挂死' if is_hung else '单板正常'}"
+            metrics = {
+                "is_hung": is_hung,
+                "serial_active": not is_hung,
+                "ping_success": not is_hung
+            }
+        elif action == "wait_boot":
+            status = TestStatus.PASSED
+            output = "Mock: 等待启动完成"
+            metrics = {
+                "boot_duration_sec": random.uniform(30, 90),
+                "keywords_matched": ["login:", "root@"]
+            }
+        elif action == "check_status":
+            status = TestStatus.PASSED
+            output = "Mock: 单板状态检查完成"
+            metrics = {
+                "status": "online",
+                "ping_ok": True,
+                "serial_connected": True
+            }
+        elif action == "save_checkpoint":
+            status = TestStatus.PASSED
+            output = f"Mock: 检查点已保存 - {params.get('checkpoint_id', 'unknown')}"
+            metrics = {
+                "checkpoint_id": params.get("checkpoint_id"),
+                "saved": True
+            }
+        elif action == "load_checkpoint":
+            status = TestStatus.PASSED
+            output = f"Mock: 检查点已加载 - {params.get('checkpoint_id', 'unknown')}"
+            metrics = {
+                "checkpoint_id": params.get("checkpoint_id"),
+                "loaded": True
+            }
+        else:
+            status = TestStatus.ERROR
+            output = f"Mock: 未知操作 - {action}"
+            metrics = {}
+            return TestResult(
+                test_id=params.get("test_id", f"board_{int(time.time())}"),
+                test_type=self.get_name(),
+                status=status,
+                output=output,
+                metrics=metrics,
+                duration_ms=0,
+                error_message=f"Unknown action: {action}",
+                timestamp=datetime.now().isoformat()
+            )
+
+        duration_ms = int((time.time() - start_time) * 1000)
+
+        return TestResult(
+            test_id=params.get("test_id", f"board_{action}_{int(time.time())}"),
+            test_type=self.get_name(),
+            status=status,
+            output=output,
+            metrics=metrics,
+            duration_ms=duration_ms,
+            timestamp=datetime.now().isoformat()
+        )
+
+    def is_available(self) -> bool:
+        """Mock 工具始终可用"""
+        return True
+
+
 def initialize_mock_tools() -> None:
     """初始化并注册所有 Mock 工具"""
     register_tool(MockClockTestTool())
     register_tool(MockPowerTestTool())
     register_tool(MockTemperatureTestTool())
     register_tool(MockGeneralTestTool())
+    register_tool(MockBoardControlTool())
 
 
 # 自动初始化

@@ -132,6 +132,23 @@ class GeneralTestTool(ToolInterface):
         raise NotImplementedError("请在子类中实现")
 
 
+class BoardControlTool(ToolInterface):
+    """单板控制工具接口"""
+
+    def get_name(self) -> str:
+        return "board_control"
+
+    def get_description(self) -> str:
+        return "单板控制工具，支持重启、挂死检测、启动监控、断点续传"
+
+    def execute(self, params: Dict[str, Any]) -> TestResult:
+        """执行单板控制操作"""
+        raise NotImplementedError("请在子类中实现")
+
+    def is_available(self) -> bool:
+        raise NotImplementedError("请在子类中实现")
+
+
 # 测试工具注册表
 TOOL_REGISTRY: Dict[str, ToolInterface] = {}
 

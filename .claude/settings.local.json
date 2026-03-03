@@ -13,7 +13,10 @@
       "Bash(git commit:*)",
       "Bash(git config:*)",
       "Bash(dir:*)",
-      "Skill(code-review:code-review)"
+      "Skill(code-review:code-review)",
+      "Bash(git push:*)",
+      "Bash(gh:*)",
+      "Bash(find:*)"
     ]
   }
 }

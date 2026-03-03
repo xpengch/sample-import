@@ -1,0 +1,95 @@
+# 单板配置文件
+# Board Configuration for Chip Fault Locator
+
+# 默认配置
+default:
+  mode: local  # local 或 remote
+
+  # 串口配置
+  serial:
+    port: COM3              # Windows: COM3, Linux: /dev/ttyUSB0
+    baudrate: 115200
+    data_bits: 8
+    stop_bits: 1
+    parity: N
+    timeout: 10
+
+  # Ping 配置
+  ping:
+    host: 192.168.1.100
+    timeout: 5
+    interval: 1
+
+  # 启动配置
+  boot:
+    keywords:
+      - "login:"
+      - "root@"
+      - "# "
+    timeout: 300           # 启动超时(秒)
+    verify_ping: true      # 启动后验证Ping
+
+  # 重启配置
+  restart:
+    default_type: soft     # soft, hard, power_cycle
+    wait_for_boot: true
+    timeout: 300
+
+  # 挂死检测配置
+  hang_detection:
+    serial_timeout: 60     # 串口无输出超时(秒)
+    ping_timeout: 10        # Ping超时(秒)
+    consecutive_failures: 3 # 连续失败次数
+    strict_mode: true      # 严格模式（串口+网络都检查）
+
+# 本地单板配置示例
+local_board:
+  mode: local
+  board_id: board_001
+  serial:
+    port: COM3
+    baudrate: 115200
+  ping:
+    host: 192.168.1.100
+
+# 远程单板配置示例
+remote_board:
+  mode: remote
+  board_id: board_002
+
+  # SSH 配置
+  ssh:
+    host: 192.168.1.101
+    port: 22
+    username: root
+    password: ""            # 留空使用密钥认证
+    key_file: ""            # SSH 密钥文件路径
+    timeout: 30
+
+  ping:
+    host: 192.168.1.101
+    timeout: 5
+
+# 测试配置
+test:
+  # 挂死测试配置
+  hang_test:
+    detection_time: 60      # 检测持续时间(秒)
+    strict_mode: true
+    save_checkpoint: true   # 检测前保存检查点
+
+  # 重启测试配置
+  restart_test:
+    restart_type: soft
+    wait_for_boot: true
+    boot_timeout: 300
+    verify_after_boot: true
+
+# 断点续传配置
+resume:
+  checkpoint_dir: ~/.chip-fault-locator/checkpoints
+  auto_save: true          # 自动保存检查点
+  save_before_actions:     # 在以下操作前自动保存检查点
+    - restart
+    - detect_hang
+  max_checkpoints: 10      # 最多保留的检查点数量
