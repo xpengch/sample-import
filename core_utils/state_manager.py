@@ -15,8 +15,8 @@ class StateManager:
         os.makedirs(self.STATE_DIR, exist_ok=True)
 
     def create(self, log_file: str) -> dict:
-        """创建新的状态"""
-        return {
+        """创建新的状态并保存"""
+        state = {
             "session_id": datetime.now().strftime('%Y%m%d-%H%M%S'),
             "log_file": log_file,
             "start_time": datetime.now().isoformat(),
@@ -30,18 +30,26 @@ class StateManager:
             "decision_log": [],
             "final_conclusion": None
         }
+        self.save(state)
+        return state
 
     def load(self) -> dict:
         """加载状态"""
         if os.path.exists(self.STATE_FILE):
-            with open(self.STATE_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
+            try:
+                with open(self.STATE_FILE, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError):
+                # 文件损坏或读取错误，返回 None
+                return None
         return None
 
     def save(self, state: dict):
         """保存状态"""
         with open(self.STATE_FILE, 'w', encoding='utf-8') as f:
             json.dump(state, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
 
     def get(self) -> dict:
         """获取当前状态，如果不存在则返回 None"""
@@ -63,7 +71,7 @@ class StateManager:
             raise ValueError("状态不存在，请先使用 create() 创建状态")
         state["hypotheses"].append(hypothesis)
         self.save(state)
-        return state
+        return state  # 返回更新后的 state
 
     def update_hypothesis(self, hypothesis_id: str, updates: dict) -> dict:
         """更新特定假设"""
@@ -74,10 +82,10 @@ class StateManager:
         for h in state["hypotheses"]:
             if h["id"] == hypothesis_id:
                 h.update(updates)
-                break
+                self.save(state)
+                return state
 
-        self.save(state)
-        return state
+        raise ValueError(f"假设 ID '{hypothesis_id}' 不存在")
 
     def add_test_result(self, result: dict) -> dict:
         """添加测试结果"""

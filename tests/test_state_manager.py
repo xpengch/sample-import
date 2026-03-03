@@ -91,6 +91,27 @@ def test_update_hypothesis():
             hypotheses = sm.get_hypotheses()
             assert hypotheses[0]["confidence"] == 0.95
             assert hypotheses[0]["status"] == "confirmed"
+
+            # 测试更新不存在的假设
+            with pytest.raises(ValueError, match="假设 ID 'H999' 不存在"):
+                sm.update_hypothesis("H999", {"confidence": 0.5})
+        finally:
+            StateManager.STATE_DIR = StateManager.STATE_DIR
+            StateManager.STATE_FILE = os.path.join(StateManager.STATE_DIR, "state.json")
+
+def test_update_hypothesis_not_found():
+    """测试更新不存在的假设"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        StateManager.STATE_DIR = tmpdir
+        StateManager.STATE_FILE = os.path.join(tmpdir, "test_state.json")
+
+        try:
+            sm = StateManager()
+            state = sm.create("test.log")
+
+            # 尝试更新不存在的假设
+            with pytest.raises(ValueError, match="假设 ID 'H1' 不存在"):
+                sm.update_hypothesis("H1", {"confidence": 0.95})
         finally:
             StateManager.STATE_DIR = StateManager.STATE_DIR
             StateManager.STATE_FILE = os.path.join(StateManager.STATE_DIR, "state.json")
