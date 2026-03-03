@@ -1,7 +1,30 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
 .coverage
 .venv/
+venv/
+env/
+virtualenv/
 *.log
+
+# Config
 config.local.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+build/
+dist/
+*.egg-info/

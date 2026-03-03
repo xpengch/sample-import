@@ -1,4 +1,7 @@
-anthropic>=0.18.0
-pyyaml>=6.0
-pytest>=7.4.0
-pytest-cov>=4.1.0
+# Core dependencies
+anthropic==0.18.0
+pyyaml==6.0
+
+# Development dependencies
+pytest==7.4.0
+pytest-cov==4.1.0

@@ -8,6 +8,17 @@
 pip install -r requirements.txt
 ```
 
+## 配置
+
+设置环境变量：
+
+```bash
+export ANTHROPIC_AUTH_TOKEN="your-api-key"
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"
+```
+
+或修改 `config.yaml` 中的配置。
+
 ## 使用
 
 ```bash
