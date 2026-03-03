@@ -60,7 +60,7 @@ class StateManager:
         """添加假设"""
         state = self.get()
         if state is None:
-            raise ValueError("状态不存在")
+            raise ValueError("状态不存在，请先使用 create() 创建状态")
         state["hypotheses"].append(hypothesis)
         self.save(state)
         return state
@@ -69,7 +69,7 @@ class StateManager:
         """更新特定假设"""
         state = self.get()
         if state is None:
-            raise ValueError("状态不存在")
+            raise ValueError("状态不存在，请先使用 create() 创建状态")
 
         for h in state["hypotheses"]:
             if h["id"] == hypothesis_id:
@@ -83,7 +83,7 @@ class StateManager:
         """添加测试结果"""
         state = self.get()
         if state is None:
-            raise ValueError("状态不存在")
+            raise ValueError("状态不存在，请先使用 create() 创建状态")
         state["test_results"].append(result)
         self.save(state)
         return state
@@ -92,7 +92,7 @@ class StateManager:
         """记录决策"""
         state = self.get()
         if state is None:
-            raise ValueError("状态不存在")
+            raise ValueError("状态不存在，请先使用 create() 创建状态")
 
         state["decision_log"].append({
             "iteration": state.get("iteration", 0),
@@ -106,7 +106,7 @@ class StateManager:
         """增加迭代计数"""
         state = self.get()
         if state is None:
-            raise ValueError("状态不存在")
+            raise ValueError("状态不存在，请先使用 create() 创建状态")
         state["iteration"] = state.get("iteration", 0) + 1
         self.save(state)
         return state
